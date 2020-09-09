@@ -11,7 +11,7 @@ public class Client {
 
         try (RW rW = new RW("192.168.0.110", 9000)) {
             rW.writeLine("userKey");
-        Arduino arduino = new Arduino("COM3", 9600);
+        Arduino arduino = new Arduino("COM3", 19200);
         arduino.openConnection();
         Thread.sleep(2000);
         while (true) {
@@ -19,19 +19,39 @@ public class Client {
 
 
                 String Id = arduino.serialRead();
-                if (Id != "") {
-                    Id = Id.trim();
-                    System.out.println(Integer.parseInt(Id));
+
+                if (!Id.equals("") && !Id.equals(null) && !Id.contains("+DISC:SUCCESS\n" +
+                        "OK")) {
+
+
+                    String id = "";
+                    ;
+                    char[] b = new char[Id.length()-1];
+                           Id.getChars(0,Id.length()-1, b,0);
+                    for (int a = 0; a <b.length; a++){
+                        id = id + b[a];
+
+                    }
+
+
+
+                    System.out.println(id);
+                    //Id.replaceAll("\\s" , "");
+                    //System.out.println(Id);
+                   // System.out.println(Integer.parseInt(Id));
+                    rW.write(Integer.parseInt(id));
+                    String resp = rW.readLine();
+
+                   // System.out.println(resp);
+
+                    if (resp.equals("On")) {
+                        arduino.serialWrite('1');
+                    } else if (resp.equals("Off")) {
+                        arduino.serialWrite('0');
+                    }
                 }
-                rW.writeLine(Id);
-                String resp = rW.readLine();
 
 
-                 if (resp.equals("On")) {
-                     arduino.serialWrite('1');
-                 } else {
-                     arduino.serialWrite('0');
-                 }
 
 
 
