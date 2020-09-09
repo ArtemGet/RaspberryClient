@@ -18,6 +18,9 @@ public class Client {
 
 
 
+            try {
+
+
                 String Id = arduino.serialRead();
 
                 if (!Id.equals("") && !Id.equals(null) && !Id.contains("+DISC:SUCCESS\n" +
@@ -26,24 +29,14 @@ public class Client {
 
                     String id = "";
                     ;
-                    char[] b = new char[Id.length()-1];
-                           Id.getChars(0,Id.length()-1, b,0);
-                    for (int a = 0; a <b.length; a++){
+                    char[] b = new char[Id.length() - 1];
+                    Id.getChars(0, Id.length() - 1, b, 0);
+                    for (int a = 0; a < b.length; a++) {
                         id = id + b[a];
-
                     }
-
-
-
                     System.out.println(id);
-                    //Id.replaceAll("\\s" , "");
-                    //System.out.println(Id);
-                   // System.out.println(Integer.parseInt(Id));
                     rW.write(Integer.parseInt(id));
                     String resp = rW.readLine();
-
-                   // System.out.println(resp);
-
                     if (resp.equals("On")) {
                         arduino.serialWrite('1');
                     } else if (resp.equals("Off")) {
@@ -52,10 +45,9 @@ public class Client {
                 }
 
 
-
-
-
-
+            } catch (IOError e) {
+                System.out.println("kekus");
+            }
 
         }
         } catch (IOException e) {
