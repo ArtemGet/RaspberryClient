@@ -9,29 +9,37 @@ public class Client {
 
     public static void main(String[] args) throws InterruptedException{
 
+        try (RW rW = new RW("192.168.0.110", 9000)) {
+            rW.writeLine("userKey");
         Arduino arduino = new Arduino("COM3", 9600);
         arduino.openConnection();
         Thread.sleep(2000);
-        //waiting for bluetooth connection
-            try (RW rW = new RW("192.168.0.110", 9000)) {
-                rW.writeLine("userKey");
-                int Id = 251; //get id via bluetooth
-                rW.write(Id);
+        while (true) {
+
+
+
+                String Id = arduino.serialRead();
+                if (Id != "") {
+                    Id = Id.trim();
+                    System.out.println(Integer.parseInt(Id));
+                }
+                rW.writeLine(Id);
                 String resp = rW.readLine();
 
 
-                if (resp.equals("On")) {
-                    arduino.serialWrite('1');
-                } else {
-                    arduino.serialWrite('0');
-                }
+                 if (resp.equals("On")) {
+                     arduino.serialWrite('1');
+                 } else {
+                     arduino.serialWrite('0');
+                 }
 
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
 
+        }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
