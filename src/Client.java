@@ -15,26 +15,16 @@ public class Client {
         arduino.openConnection();
         Thread.sleep(2000);
         while (true) {
-
-
-
             try {
-
-
                 String Id = arduino.serialRead();
-
-                if (!Id.equals("") && !Id.equals(null) && !Id.contains("+DISC:SUCCESS\n" +
-                        "OK")) {
-
-
+                if (!Id.equals("") && !Id.equals(null) && !Id.contains("+DISC:SUCCESS\n" + "OK")) {
                     String id = "";
-                    ;
                     char[] b = new char[Id.length() - 1];
                     Id.getChars(0, Id.length() - 1, b, 0);
                     for (int a = 0; a < b.length; a++) {
                         id = id + b[a];
                     }
-                    System.out.println(id);
+
                     rW.write(Integer.parseInt(id));
                     String resp = rW.readLine();
                     if (resp.equals("On")) {
@@ -43,12 +33,9 @@ public class Client {
                         arduino.serialWrite('0');
                     }
                 }
-
-
             } catch (IOError e) {
                 System.out.println("kekus");
             }
-
         }
         } catch (IOException e) {
             e.printStackTrace();
